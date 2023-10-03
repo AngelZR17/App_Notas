@@ -120,6 +120,13 @@ fun notaCard(nota: Nota, modifier: Modifier=Modifier){
 @Composable
 fun taskCard(tarea: Tarea, modifier: Modifier=Modifier){
     Scaffold(
+        floatingActionButton = { FloatingActionButton(onClick = {},
+            containerColor = MaterialTheme.colorScheme.primary,
+            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomStart = 30.dp, bottomEnd = 30.dp)
+        ) {
+            Icon(imageVector = Icons.Default.Add, contentDescription = "add_button", tint = Color.White)
+        }
+        },
         topBar = { TopBar() }){}
     Card (
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
