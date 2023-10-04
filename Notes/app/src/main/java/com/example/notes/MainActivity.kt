@@ -97,7 +97,7 @@ fun taskList(
         itemsIndexed(tareas){index,tarea->
             taskCard(
                 tarea = tarea,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             )
         }
     }
