@@ -32,7 +32,7 @@ fun TopBar(){
         .fillMaxSize()
     ){
         TopAppBar(
-            //modifier = Modifier.padding(top = 24.dp),
+            //modifier = Modifier.padding(top = 80.dp),
             colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
             title = {
                 Text(stringResource(id = R.string.title), color = Color.White, fontWeight = FontWeight.Bold)

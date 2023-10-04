@@ -41,6 +41,8 @@ import com.example.notes.ui.theme.NotesTheme
 
 
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +53,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //notasList(notas=notasInfo.notas.toList());
-                    taskList(tareas = tareasInfo.tareas.toList());
+                    Scaffold(
+                        floatingActionButton = { FloatingActionButton(onClick = {},
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomStart = 30.dp, bottomEnd = 30.dp)
+                        ) {
+                            Icon(imageVector = Icons.Default.Add, contentDescription = "add_button", tint = Color.White)
+                        }
 
+                        },
+                        topBar = { TopBar() })
+                    {
+                        taskList(tareas = tareasInfo.tareas);
+                    }
+                    //notasList(notas=notasInfo.notas.toList());
                 }
             }
         }
@@ -78,11 +91,13 @@ fun taskList(
     modifier: Modifier= Modifier,
     tareas:List<Tarea>
 ){
-    LazyColumn(){
-        itemsIndexed(tareas){index,tareas->
+    LazyColumn(
+        modifier = Modifier.padding(top = 65.dp)
+    ){
+        itemsIndexed(tareas){index,tarea->
             taskCard(
-                tarea = tareas,
-                modifier =Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                tarea = tarea,
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
             )
         }
     }
@@ -92,7 +107,6 @@ fun notaCard(nota: Nota, modifier: Modifier=Modifier){
     Card (
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier,
-
     ) {
         Row(
             modifier = Modifier
@@ -119,58 +133,51 @@ fun notaCard(nota: Nota, modifier: Modifier=Modifier){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun taskCard(tarea: Tarea, modifier: Modifier=Modifier){
-    Scaffold(
-        floatingActionButton = { FloatingActionButton(onClick = {},
-            containerColor = MaterialTheme.colorScheme.primary,
-            shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp, bottomStart = 30.dp, bottomEnd = 30.dp)
+        Column(
+            modifier = Modifier.padding(top = 20.dp)
         ) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "add_button", tint = Color.White)
-        }
-        },
-        topBar = { TopBar() }){}
-    Card (
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = modifier.padding(top = 80.dp),
-        ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .sizeIn(minHeight = 72.dp)
-        ) {
-            val checked = remember { mutableStateOf(false)}
-            Column(modifier = Modifier.fillMaxWidth(0.9f)) {
-                Row {
-                    Text(
-                        text = tarea.nombre
-                    )
-                }
-                Row {
-                    Text(
-                        text = tarea.descripcion.substring(0,20)+"..."
-                    )
-                }
-                Row {
-                    Text(
-                        text = tarea.fecha.toString()
-                    )
+            Card (
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .sizeIn(minHeight = 72.dp)
+                ) {
+                    val checked = remember { mutableStateOf(false)}
+                    Column(modifier = Modifier.fillMaxWidth(0.9f)) {
+                        Row {
+                            Text(
+                                text = tarea.nombre
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = tarea.descripcion.substring(0,20)+"..."
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = tarea.fecha.toString()
+                            )
+                        }
+                    }
+
+                    Column(modifier = Modifier.fillMaxWidth(0.1f)){
+                        Row {
+
+                        }
+                        Row {
+                            Checkbox(
+                                checked=checked.value,
+                                onCheckedChange = {isChecked ->checked.value=isChecked}
+                            )
+                        }
+                    }
                 }
             }
-
-            Column(modifier = Modifier.fillMaxWidth(0.1f)){
-                Row {
-
-                }
-                Row {
-                    Checkbox(
-                        checked=checked.value,
-                        onCheckedChange = {isChecked ->checked.value=isChecked}
-                    )
-                }
-
-            }
         }
-    }
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
