@@ -29,12 +29,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brian_david_angel.notas.ui.theme.NotasTheme
@@ -62,23 +66,23 @@ fun AddNoteBar(){
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Agregar Nota") },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
+                title = { Text("Agregar Nota", color = Color.White) },
                 navigationIcon = {
                     IconButton(
                         onClick = {
                             //
                         }
                     ) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Botón de Retroceso")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Botón de Retroceso", tint = Color.White)
                     }
                 },
                 actions = {
                     IconButton(
                         onClick = {
-
                         }
                     ) {
-                        Icon(Icons.Default.Menu, contentDescription = "Menú")
+                        Icon(painter = painterResource(id = R.drawable.notification), contentDescription = "Menú", tint = Color.White)
                     }
                 }
             )
@@ -88,31 +92,28 @@ fun AddNoteBar(){
         },
         bottomBar = {
             BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 actions = {
                     IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(Icons.Default.Edit,
-                            contentDescription = "Localized description")
-                    }
-                    IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(
-                            Icons.Default.Edit,
+                        Icon(painter = painterResource(id = R.drawable.attach_file),
                             contentDescription = "Localized description",
+                            tint = Color.White
                         )
                     }
                     IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(
-                            Icons.Filled.Edit,
+                        Icon(painter = painterResource(id = R.drawable.checklist),
                             contentDescription = "Localized description",
+                            tint = Color.White
                         )
                     }
                 },
                 floatingActionButton = {
                     FloatingActionButton(
                         onClick = { /* do something */ },
-                        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                     ) {
-                        Icon(Icons.Filled.Check, "Localized description")
+                        Icon(Icons.Filled.Check, "Localized description", tint = Color.White)
                     }
                 }
             )

@@ -29,9 +29,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brian_david_angel.notas.data.DataNotes
@@ -62,14 +66,23 @@ fun NotesAppBar(){
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Notas") },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
+                title = { Text("Notas", color = Color.White) },
                 actions = {
                     IconButton(
                         onClick = {
 
                         }
                     ) {
-                        Icon(Icons.Default.Search, contentDescription = "Buscar")
+                        Icon(painter = painterResource(id = R.drawable.search), contentDescription = "Buscar", tint = Color.White)
+                    }
+
+                    IconButton(
+                        onClick = {
+
+                        }
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.notification), contentDescription = "Buscar", tint = Color.White)
                     }
                 }
             )
@@ -81,9 +94,10 @@ fun NotesAppBar(){
                     val intent = Intent(context, AddNoteActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
-                }
+                },
+                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Agregar")
+                Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)
             }
         },
         content = {
