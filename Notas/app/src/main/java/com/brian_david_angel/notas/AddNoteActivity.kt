@@ -8,16 +8,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -37,8 +32,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.brian_david_angel.notas.ui.theme.NotasTheme
@@ -71,7 +66,7 @@ fun AddNoteBar(){
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            //
+
                         }
                     ) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Botón de Retroceso", tint = Color.White)
@@ -80,6 +75,7 @@ fun AddNoteBar(){
                 actions = {
                     IconButton(
                         onClick = {
+
                         }
                     ) {
                         Icon(painter = painterResource(id = R.drawable.notification), contentDescription = "Menú", tint = Color.White)
@@ -96,13 +92,19 @@ fun AddNoteBar(){
                 actions = {
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(painter = painterResource(id = R.drawable.attach_file),
-                            contentDescription = "Localized description",
+                            contentDescription = "Adjuntar archivo",
                             tint = Color.White
                         )
                     }
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(painter = painterResource(id = R.drawable.checklist),
-                            contentDescription = "Localized description",
+                            contentDescription = "Tarea",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(painter = painterResource(id = R.drawable.microphone),
+                            contentDescription = "Audio",
                             tint = Color.White
                         )
                     }
@@ -113,7 +115,7 @@ fun AddNoteBar(){
                         containerColor = MaterialTheme.colorScheme.primary,
                         elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                     ) {
-                        Icon(Icons.Filled.Check, "Localized description", tint = Color.White)
+                        Icon(painter = painterResource(id = R.drawable.save), "Localized description", tint = Color.White)
                     }
                 }
             )
@@ -123,25 +125,26 @@ fun AddNoteBar(){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun camposTexto(contentPadding: PaddingValues = PaddingValues(0.dp)){
+fun camposTexto(contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.padding_values))){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 70.dp),
+            .padding(top = dimensionResource(R.dimen.padding_top_column)),
     ) {
         var text by rememberSaveable { mutableStateOf("") }
         var text2 by rememberSaveable { mutableStateOf("") }
         TextField(
-            modifier = Modifier.width(370.dp)
-                .padding(start = 13.dp),
+            modifier = Modifier.fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_start_textField), end=dimensionResource(R.dimen.padding_end_textField)),
             value = text,
             onValueChange = { text = it },
-            label = { Text("Titulo") }
+            label = { Text("Titulo de la nota") }
         )
         Spacer(modifier = Modifier.height(10.dp))
         TextField(
-            modifier = Modifier.size(370.dp, 200.dp)
-                .padding(start = 13.dp),
+            modifier = Modifier.fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_start_textField), end=dimensionResource(R.dimen.padding_end_textField))
+                .height(400.dp),
             value = text2,
             onValueChange = { text2 = it },
             label = { Text("Descripcion") }
