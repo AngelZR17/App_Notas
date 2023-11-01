@@ -36,6 +36,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brian_david_angel.notas.ui.theme.NotasTheme
 
 class AddNoteActivity : ComponentActivity() {
@@ -125,19 +126,17 @@ fun AddNoteBar(){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun camposTexto(contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.padding_values))){
+fun camposTexto(contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.padding_values)), addnoteViewModel: AddNoteViewModel = viewModel()){
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = dimensionResource(R.dimen.padding_top_column)),
     ) {
-        var text by rememberSaveable { mutableStateOf("") }
-        var text2 by rememberSaveable { mutableStateOf("") }
         TextField(
             modifier = Modifier.fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_start_textField), end=dimensionResource(R.dimen.padding_end_textField)),
-            value = text,
-            onValueChange = { text = it },
+            value = addnoteViewModel.textTitulo,
+            onValueChange = { addnoteViewModel.actualizarTitulo(it) },
             label = { Text("Titulo de la nota") }
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -145,8 +144,8 @@ fun camposTexto(contentPadding: PaddingValues = PaddingValues(dimensionResource(
             modifier = Modifier.fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_start_textField), end=dimensionResource(R.dimen.padding_end_textField))
                 .height(400.dp),
-            value = text2,
-            onValueChange = { text2 = it },
+            value = addnoteViewModel.textDescripcion,
+            onValueChange = { addnoteViewModel.actualizarDescripcion(it) },
             label = { Text("Descripcion") }
         )
     }
