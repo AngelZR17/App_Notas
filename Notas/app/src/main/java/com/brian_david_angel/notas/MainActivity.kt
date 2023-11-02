@@ -35,6 +35,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.brian_david_angel.notas.data.DataNotes
 import com.brian_david_angel.notas.model.NotasPrincipal
 import com.brian_david_angel.notas.ui.theme.NotasTheme
@@ -49,7 +54,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NotesAppBar()
+                    val navigationController = rememberNavController()
+                    NavHost(navController = navigationController, startDestination = Rutas.HomeScreen.ruta){
+                        composable(Rutas.HomeScreen.ruta){ NotesAppBar(navController = navigationController) }
+                        composable(Rutas.NoteScreen.ruta){ AddNoteBar(navController = navigationController) }
+                    }
                 }
             }
         }
@@ -58,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotesAppBar(){
+fun NotesAppBar(navController: NavHostController){
     val context = LocalContext.current
     Scaffold(
         topBar = {
@@ -88,9 +97,7 @@ fun NotesAppBar(){
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    val intent = Intent(context, AddNoteActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(intent)
+                    navController.navigate(Rutas.NoteScreen.ruta)
                 },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
@@ -146,6 +153,7 @@ fun tarjetaNota(notasPrin: NotasPrincipal) {
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -153,3 +161,4 @@ fun GreetingPreview() {
         NotesAppBar()
     }
 }
+ */

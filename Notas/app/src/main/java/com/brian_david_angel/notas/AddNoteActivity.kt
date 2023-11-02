@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.brian_david_angel.notas.ui.theme.NotasTheme
 
 class AddNoteActivity : ComponentActivity() {
@@ -49,7 +50,7 @@ class AddNoteActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AddNoteBar()
+
                 }
             }
         }
@@ -58,7 +59,7 @@ class AddNoteActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNoteBar(){
+fun AddNoteBar(navController: NavHostController){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,7 +68,7 @@ fun AddNoteBar(){
                 navigationIcon = {
                     IconButton(
                         onClick = {
-
+                            navController.navigate(Rutas.HomeScreen.ruta)
                         }
                     ) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Botón de Retroceso", tint = Color.White)
@@ -156,6 +157,6 @@ fun camposTexto(contentPadding: PaddingValues = PaddingValues(dimensionResource(
 @Composable
 fun GreetingPreview2() {
     NotasTheme {
-        AddNoteBar()
+
     }
 }
