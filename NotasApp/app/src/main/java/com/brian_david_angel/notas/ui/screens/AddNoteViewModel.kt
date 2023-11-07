@@ -35,17 +35,6 @@ class AddNoteViewModel(private val itemsRepository: ItemsRepository) : ViewModel
         }
     }
 
-    fun Item.toItemUiState(isEntryValid: Boolean = false): ItemUiState = ItemUiState(
-        itemDetails = this.toItemDetails(),
-        isEntryValid = isEntryValid
-    )
-
-    fun Item.toItemDetails(): ItemDetails = ItemDetails(
-        id = id,
-        titulo = titulo,
-        contenido = contenido
-    )
-
     data class ItemUiState(
         val itemDetails: ItemDetails = ItemDetails(),
         val isEntryValid: Boolean = false
@@ -54,6 +43,6 @@ class AddNoteViewModel(private val itemsRepository: ItemsRepository) : ViewModel
     data class ItemDetails(
         val id: Int = 0,
         val titulo: String = "",
-        val contenido: String = "",
+        val contenido: String = ""
     )
 }
