@@ -121,7 +121,6 @@ fun contenidoPrincipal(contentPadding: PaddingValues = PaddingValues(0.dp), item
     }
 }
 
-
 @Composable
 fun tarjetaNota(item: Item, viewModel: HomeViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
@@ -166,7 +165,9 @@ fun tarjetaNota(item: Item, viewModel: HomeViewModel, navController: NavControll
                     modifier = Modifier
                         .align(Alignment.Center)
                 ) {
-                    Icon(painter = painterResource(id = R.drawable.notification), contentDescription = "Recordatorio", tint = Color.White)
+                    Icon(painter = painterResource(id = R.drawable.trash),
+                        contentDescription = "Borrar",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         }
