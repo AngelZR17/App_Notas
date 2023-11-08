@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class MainModel(private val itemsRepository: ItemsRepository) : ViewModel() {
+class HomeViewModel(private val itemsRepository: ItemsRepository) : ViewModel() {
 
     suspend fun eliminarNota(item: Item){
         itemsRepository.deleteItem(item)

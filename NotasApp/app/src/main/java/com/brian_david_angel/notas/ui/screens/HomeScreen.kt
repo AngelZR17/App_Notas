@@ -1,5 +1,6 @@
 package com.brian_david_angel.notas.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -36,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenUI(viewModel: MainModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController){
+fun HomeScreenUI(viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController){
     //val context = LocalContext.current
     val homeUiState by viewModel.homeUiState.collectAsState()
     Scaffold(
@@ -88,13 +88,13 @@ fun HomeScreenUI(viewModel: MainModel = viewModel(factory = AppViewModelProvider
             }
         },
         content = {
-            contenidoPrincipal(contentPadding = it, itemList = homeUiState.itemList, viewModel=viewModel)
+            contenidoPrincipal(contentPadding = it, itemList = homeUiState.itemList, viewModel=viewModel, navController=navController)
         }
     )
 }
 
 @Composable
-fun contenidoPrincipal(contentPadding: PaddingValues = PaddingValues(0.dp), itemList: List<Item>, viewModel: MainModel){
+fun contenidoPrincipal(contentPadding: PaddingValues = PaddingValues(0.dp), itemList: List<Item>, viewModel: HomeViewModel, navController: NavController){
     val itemList: List<Item> = itemList
     if (itemList.isEmpty()) {
         Column(
@@ -115,7 +115,7 @@ fun contenidoPrincipal(contentPadding: PaddingValues = PaddingValues(0.dp), item
             contentPadding = contentPadding
         ){
             items(items = itemList, key = { it.id }) {
-                    item -> tarjetaNota(item, viewModel)
+                    item -> tarjetaNota(item, viewModel, navController)
             }
         }
     }
@@ -123,11 +123,13 @@ fun contenidoPrincipal(contentPadding: PaddingValues = PaddingValues(0.dp), item
 
 
 @Composable
-fun tarjetaNota(item: Item, viewModel: MainModel) {
+fun tarjetaNota(item: Item, viewModel: HomeViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable { navController.navigate("editnote/${item.id}") }
     ) {
         Row(
             modifier = Modifier
