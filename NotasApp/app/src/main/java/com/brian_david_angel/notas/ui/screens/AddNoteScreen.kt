@@ -1,5 +1,6 @@
 package com.brian_david_angel.notas.ui.screens
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -34,12 +36,26 @@ import androidx.navigation.NavController
 import com.brian_david_angel.notas.AppViewModelProvider
 import com.brian_david_angel.notas.R
 import com.brian_david_angel.notas.ui.theme.NotasTheme
+import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 import kotlinx.coroutines.launch
+
+@Composable
+fun AddNoteScreenUI(navController: NavController, navigationType: NotesAppNavigationType){
+    Box(modifier = Modifier.fillMaxSize()){
+        Column(
+            modifier = Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            ContentAddNoteScreenUI(navController = navController, navigationType = navigationType)
+        }
+
+    }
+}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController){
+fun ContentAddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController, navigationType: NotesAppNavigationType){
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {

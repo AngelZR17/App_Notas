@@ -1,5 +1,8 @@
 package com.brian_david_angel.notas.ui.screens
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.BottomAppBar
@@ -15,12 +18,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.brian_david_angel.notas.AppViewModelProvider
 import com.brian_david_angel.notas.R
+import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 import kotlinx.coroutines.launch
 
 object EditNoteDestination {
@@ -28,9 +34,22 @@ object EditNoteDestination {
     val routeWithArgs = "editnote/{$itemIdArg}"
 }
 
+@Composable
+fun EditNoteScreenUI(navController: NavController, navigationType: NotesAppNavigationType){
+    Box(modifier = Modifier.fillMaxSize()){
+        Column(
+            modifier = Modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            ContentEditNoteScreenUI(navController = navController, navigationType = navigationType)
+        }
+
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNoteScreenUI(viewModel: EditNoteViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController){
+fun ContentEditNoteScreenUI(viewModel: EditNoteViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController, navigationType: NotesAppNavigationType){
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {

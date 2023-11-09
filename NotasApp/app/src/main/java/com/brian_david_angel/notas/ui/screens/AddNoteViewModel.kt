@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.brian_david_angel.notas.data.Item
 import com.brian_david_angel.notas.data.ItemsRepository
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class AddNoteViewModel(private val itemsRepository: ItemsRepository) : ViewModel() {
 
@@ -34,10 +36,17 @@ class AddNoteViewModel(private val itemsRepository: ItemsRepository) : ViewModel
 
 }
 
+fun fechaHoraActual() : String {
+    val date = Date()
+    val sdf = SimpleDateFormat("dd/MMM/yyyy hh:mm a")
+    return sdf.format(date)
+}
+
 fun ItemDetails.toItem(): Item = Item(
     id = id,
     titulo = titulo,
-    contenido = contenido
+    contenido = contenido,
+    fecha=fechaHoraActual()
 )
 
 fun Item.toItemUiState(isEntryValid: Boolean = false): ItemUiState = ItemUiState(
@@ -48,7 +57,8 @@ fun Item.toItemUiState(isEntryValid: Boolean = false): ItemUiState = ItemUiState
 fun Item.toItemDetails(): ItemDetails = ItemDetails(
     id = id,
     titulo = titulo,
-    contenido = contenido
+    contenido = contenido,
+    fecha=fecha
 )
 
 data class ItemUiState(
@@ -59,5 +69,6 @@ data class ItemUiState(
 data class ItemDetails(
     val id: Int = 0,
     val titulo: String = "",
-    val contenido: String = ""
+    val contenido: String = "",
+    val fecha:String=""
 )
