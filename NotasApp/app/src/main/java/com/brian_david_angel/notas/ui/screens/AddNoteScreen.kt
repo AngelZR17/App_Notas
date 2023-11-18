@@ -39,6 +39,12 @@ import com.brian_david_angel.notas.ui.theme.NotasTheme
 import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 import kotlinx.coroutines.launch
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import android.content.Intent
+
+
 @Composable
 fun AddNoteScreenUI(navController: NavController, navigationType: NotesAppNavigationType){
     Box(modifier = Modifier.fillMaxSize()){
@@ -56,6 +62,11 @@ fun AddNoteScreenUI(navController: NavController, navigationType: NotesAppNaviga
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentAddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController, navigationType: NotesAppNavigationType){
+    val openGallery = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+
+        }
+    }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
@@ -93,7 +104,7 @@ fun ContentAddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = App
             BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 actions = {
-                    IconButton(onClick = { /* doSomething() */ }) {
+                    IconButton(onClick = { openGallery.launch("image/*") }) {
                         Icon(painter = painterResource(id = R.drawable.attach_file),
                             contentDescription = "Adjuntar archivo",
                             tint = Color.White

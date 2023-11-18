@@ -28,6 +28,10 @@ import com.brian_david_angel.notas.AppViewModelProvider
 import com.brian_david_angel.notas.R
 import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 import kotlinx.coroutines.launch
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import android.content.Intent
 
 object EditNoteDestination {
     const val itemIdArg = "itemId"
@@ -50,6 +54,11 @@ fun EditNoteScreenUI(navController: NavController, navigationType: NotesAppNavig
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentEditNoteScreenUI(viewModel: EditNoteViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController, navigationType: NotesAppNavigationType){
+    val openGallery = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+
+        }
+    }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
         topBar = {
@@ -87,7 +96,7 @@ fun ContentEditNoteScreenUI(viewModel: EditNoteViewModel = viewModel(factory = A
             BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 actions = {
-                    IconButton(onClick = { /* doSomething() */ }) {
+                    IconButton(onClick = { openGallery.launch("image/*") }) {
                         Icon(painter = painterResource(id = R.drawable.attach_file),
                             contentDescription = "Adjuntar archivo",
                             tint = Color.White
