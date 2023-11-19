@@ -38,11 +38,16 @@ import com.brian_david_angel.notas.R
 import com.brian_david_angel.notas.ui.theme.NotasTheme
 import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 import kotlinx.coroutines.launch
-
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.ui.platform.LocalContext
 import android.content.Intent
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import coil.compose.rememberImagePainter
 
 
 @Composable
@@ -58,14 +63,47 @@ fun AddNoteScreenUI(navController: NavController, navigationType: NotesAppNaviga
     }
 }
 
+@Composable
+fun CamposTextoCuerpo(
+    contentPadding: PaddingValues = PaddingValues(dimensionResource(R.dimen.padding_values)),
+    itemUiState: ItemUiState,
+    onItemValueChange: (ItemDetails) -> Unit,
+    selectedImageUri: Uri?
+){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = dimensionResource(R.dimen.padding_top_column)),
+    ) {
+        ItemInputForm(
+            itemDetails = itemUiState.itemDetails,
+            onValueChange = onItemValueChange
+        )
+        // Mostrar la imagen seleccionada debajo de los campos de texto si hay una URI seleccionada
+        selectedImageUri?.let { uri ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(R.dimen.padding_values))
+            ) {
+                Image(
+                    painter = rememberImagePainter(uri),
+                    contentDescription = "Imagen seleccionada",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 300.dp) // Establecer un tamaño máximo para la imagen
+                )
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentAddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = AppViewModelProvider.Factory), navController: NavController, navigationType: NotesAppNavigationType){
+    val selectedImageUri = remember { mutableStateOf<Uri?>(null) }
     val openGallery = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-
-        }
+        selectedImageUri.value = uri
     }
     val coroutineScope = rememberCoroutineScope()
     Scaffold(
@@ -93,11 +131,12 @@ fun ContentAddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = App
                 }
             )
         },
-        content = {
+        content = { padding ->
             CamposTextoCuerpo(
-                contentPadding = it,
+                contentPadding = padding,
                 itemUiState = viewModel.itemUiState,
-                onItemValueChange = viewModel::updateUiState
+                onItemValueChange = viewModel::updateUiState,
+                selectedImageUri = selectedImageUri.value // Pasar la URI de la imagen seleccionada
             )
         },
         bottomBar = {
