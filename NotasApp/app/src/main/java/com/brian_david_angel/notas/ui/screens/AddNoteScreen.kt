@@ -150,12 +150,6 @@ fun ContentAddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = App
                         )
                     }
                     IconButton(onClick = { /* doSomething() */ }) {
-                        Icon(painter = painterResource(id = R.drawable.checklist),
-                            contentDescription = "Tarea",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(onClick = { /* doSomething() */ }) {
                         Icon(painter = painterResource(id = R.drawable.microphone),
                             contentDescription = "Audio",
                             tint = Color.White

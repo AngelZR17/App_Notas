@@ -1,5 +1,6 @@
 package com.brian_david_angel.notas.ui.screens
 
+import android.text.style.BackgroundColorSpan
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Article
+import androidx.compose.material.icons.filled.Class
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Task
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -105,21 +111,43 @@ fun ContentHomeScreenUI(viewModel: HomeViewModel = viewModel(factory = AppViewMo
                 }
             )
         },
-        floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate("addnote")
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                actions = {
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(
+                            Icons.Filled.Article,
+                            contentDescription = "Notas",
+                            tint = Color.White,
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    IconButton(onClick = { /* doSomething() */ }) {
+                        Icon(
+                            Icons.Filled.Class,
+                            contentDescription = "Tareas",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
                 },
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)
-            }
+                floatingActionButton = {
+                    FloatingActionButton(
+                        onClick = {
+                            navController.navigate("addnote")
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)
+                    }
+                }
+            )
         },
-
         content = {
             contenidoPrincipal(contentPadding = it, itemList = homeUiState.itemList, viewModel=viewModel, navController=navController, navigationType=navigationType)
-        }
+        },
+
     )
 }
 
@@ -274,6 +302,7 @@ private fun mostrarDialogoEliminacion(
     cancelarEliminacion: () -> Unit,
 ) {
     AlertDialog(onDismissRequest = {  },
+        containerColor = MaterialTheme.colorScheme.background,
         title = { Text("Confirmar eliminación") },
         text = { Text("¿Estás seguro de que deseas eliminar esta nota?") },
         modifier = Modifier.padding(16.dp),
