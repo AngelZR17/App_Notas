@@ -114,7 +114,7 @@ fun ContentHomeScreenTaskUI(viewModel: HomeViewModel = viewModel(factory = AppVi
             BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 actions = {
-                    IconButton(onClick = { navController.navigate("home") }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.Filled.Article,
                             contentDescription = "Notas",
