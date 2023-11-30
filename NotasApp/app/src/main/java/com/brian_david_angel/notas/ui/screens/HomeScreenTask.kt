@@ -116,15 +116,15 @@ fun ContentHomeScreenTaskUI(viewModel: HomeViewModel = viewModel(factory = AppVi
                 actions = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            Icons.Filled.Article,
+                            Icons.Filled.Description,
                             contentDescription = "Notas",
                             tint = Color.White,
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                     IconButton(onClick = { /*navController.navigate("hometask")*/ }) {
                         Icon(
-                            Icons.Filled.Class,
+                            Icons.Filled.Task,
                             contentDescription = "Tareas",
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)

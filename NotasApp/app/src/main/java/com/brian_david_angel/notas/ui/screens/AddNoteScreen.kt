@@ -45,6 +45,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.platform.LocalContext
 import android.content.Intent
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import coil.compose.rememberImagePainter
@@ -146,13 +147,15 @@ fun ContentAddNoteScreenUI(viewModel: AddNoteViewModel = viewModel(factory = App
                     IconButton(onClick = { openGallery.launch("image/*") }) {
                         Icon(painter = painterResource(id = R.drawable.attach_file),
                             contentDescription = "Adjuntar archivo",
-                            tint = Color.White
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                     IconButton(onClick = { /* doSomething() */ }) {
                         Icon(painter = painterResource(id = R.drawable.microphone),
                             contentDescription = "Audio",
-                            tint = Color.White
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 },

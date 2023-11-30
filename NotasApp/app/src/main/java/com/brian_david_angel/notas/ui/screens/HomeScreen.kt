@@ -116,15 +116,15 @@ fun ContentHomeScreenUI(viewModel: HomeViewModel = viewModel(factory = AppViewMo
                 actions = {
                     IconButton(onClick = { /*navController.navigate("home")*/ }) {
                         Icon(
-                            Icons.Filled.Article,
+                            Icons.Filled.Description,
                             contentDescription = "Notas",
                             tint = Color.White,
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                     IconButton(onClick = { navController.navigate("hometask") }) {
                         Icon(
-                            Icons.Filled.Class,
+                            Icons.Filled.Task,
                             contentDescription = "Tareas",
                             tint = Color.White,
                             modifier = Modifier.size(24.dp)
@@ -157,7 +157,9 @@ fun contenidoPrincipal(contentPadding: PaddingValues = PaddingValues(0.dp), item
         PermanentNavigationDrawer(
             drawerContent = {
                 ModalDrawerSheet(
-                    modifier = Modifier.fillMaxWidth(0.2f).padding(top=62.dp)
+                    modifier = Modifier
+                        .fillMaxWidth(0.2f)
+                        .padding(top = 62.dp)
                 ) {
                     var selectedItem by remember { mutableStateOf(2) }
                     bottomNavItems.forEachIndexed { index, item ->
