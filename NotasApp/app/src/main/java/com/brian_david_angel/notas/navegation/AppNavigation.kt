@@ -13,6 +13,7 @@ import androidx.navigation.navArgument
 import com.brian_david_angel.notas.ui.screens.AddNoteScreenUI
 import com.brian_david_angel.notas.ui.screens.EditNoteDestination
 import com.brian_david_angel.notas.ui.screens.EditNoteScreenUI
+import com.brian_david_angel.notas.ui.screens.HomeScreenTaskUI
 import com.brian_david_angel.notas.ui.screens.HomeScreenUI
 import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 
@@ -43,6 +44,9 @@ fun AppNavigation(
     NavHost(navController = navController, startDestination = "home"){
         composable(route = "home") {
             HomeScreenUI(navController, navigationType)
+        }
+        composable(route = "hometask") {
+            HomeScreenTaskUI(navController, navigationType)
         }
         composable("addnote"){
             AddNoteScreenUI(navController, navigationType)

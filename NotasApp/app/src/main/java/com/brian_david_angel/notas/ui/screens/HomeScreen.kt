@@ -76,10 +76,9 @@ fun HomeScreenUI(navController: NavController, navigationType: NotesAppNavigatio
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-                    ContentHomeScreenUI(navController=navController, navigationType = navigationType)
-
-            }
+            ContentHomeScreenUI(navController=navController, navigationType = navigationType)
         }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -115,7 +114,7 @@ fun ContentHomeScreenUI(viewModel: HomeViewModel = viewModel(factory = AppViewMo
             BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 actions = {
-                    IconButton(onClick = { /* doSomething() */ }) {
+                    IconButton(onClick = { /*navController.navigate("home")*/ }) {
                         Icon(
                             Icons.Filled.Article,
                             contentDescription = "Notas",
@@ -123,7 +122,7 @@ fun ContentHomeScreenUI(viewModel: HomeViewModel = viewModel(factory = AppViewMo
                             modifier = Modifier.size(28.dp)
                         )
                     }
-                    IconButton(onClick = { /* doSomething() */ }) {
+                    IconButton(onClick = { navController.navigate("hometask") }) {
                         Icon(
                             Icons.Filled.Class,
                             contentDescription = "Tareas",
