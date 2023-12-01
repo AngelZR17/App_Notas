@@ -11,23 +11,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.brian_david_angel.notas.app.NotesApplication
 import com.brian_david_angel.notas.navegation.AppNavigation
-import com.brian_david_angel.notas.ui.screens.AddNoteScreenUI
-import com.brian_david_angel.notas.ui.screens.EditNoteDestination
-import com.brian_david_angel.notas.ui.screens.EditNoteScreenUI
-import com.brian_david_angel.notas.ui.screens.HomeScreenUI
 import com.brian_david_angel.notas.ui.theme.NotasTheme
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var notesViewModel : NotesViewModel
+    private lateinit var taskViewModel : TaskViewModel
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        notesViewModel =  NotesViewModelFactory(NotesApplication.getDao()).create(NotesViewModel::class.java)
+        taskViewModel =  TaskViewModelFactory(NotesApplication.getDaoTask()).create(TaskViewModel::class.java)
+
         setContent {
             NotasTheme {
                 val windowSize = calculateWindowSizeClass(this)
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation(windowSize.widthSizeClass)
+                    AppNavigation(windowSize.widthSizeClass, notesViewModel, taskViewModel)
                 }
             }
         }

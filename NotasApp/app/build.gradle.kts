@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.brian_david_angel.notas"
-        minSdk = 21
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -69,6 +69,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     //ROOM
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
+    implementation("androidx.compose.runtime:runtime-livedata:1.2.0")
     implementation("androidx.navigation:navigation-compose:2.5.3")
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
@@ -78,6 +79,8 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
     //ICONOS
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
+    //LOAD IMAGE
+    implementation("io.coil-kt:coil-compose:2.1.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
