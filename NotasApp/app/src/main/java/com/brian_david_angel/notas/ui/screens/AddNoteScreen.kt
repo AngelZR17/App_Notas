@@ -1,5 +1,6 @@
 package com.brian_david_angel.notas.ui.screens
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -8,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,11 +17,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Task
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -28,6 +36,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -47,6 +56,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
@@ -59,6 +69,12 @@ import kotlinx.coroutines.launch
 import com.brian_david_angel.notas.NotesViewModel
 import com.brian_david_angel.notas.app.NotesApplication
 import com.brian_david_angel.notas.data.Note
+import com.brian_david_angel.notas.others_codes.ComposeFileProvider
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.ui.PlayerView
 
 
 @Composable
@@ -74,31 +90,48 @@ fun AddNoteScreenUI(navController: NavController, notesViewModel: NotesViewModel
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavController){
-    val note = remember {
-        mutableStateOf(Constants.noteDetailPlaceHolder)
-    }
+    val context = LocalContext.current
+    var uriCamara : Uri? = null
     val currentNote = rememberSaveable { mutableStateOf("") }
     val currentTitle = rememberSaveable { mutableStateOf("") }
-    val currentPhotos = rememberSaveable { mutableStateOf("") }
-    val saveButtonState = rememberSaveable { mutableStateOf(false) }
+    var urisPhotos by remember { mutableStateOf(listOf<String>()) }
+
+
+    var permisosRequeridos by rememberSaveable { mutableStateOf(false) }
+    val recordAudioPermissionState = rememberPermissionState(
+        Manifest.permission.RECORD_AUDIO
+    )
 
 
     val getImageRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri ->
-
         if (uri != null) {
-            NotesApplication.getUriPermission(uri)
-        }
-        currentPhotos.value = uri.toString()
-        if (currentPhotos.value != note.value.imageUri) {
-            saveButtonState.value = true
+            urisPhotos = urisPhotos.plus(uri!!.toString()+"|IMG")
         }
     }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture(),
+        onResult = { success ->
+            if(success){
+                urisPhotos = urisPhotos.plus(uriCamara!!.toString()+"|IMG")
+            }
+        }
+    )
+
+    val videoLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CaptureVideo(),
+        onResult = { success ->
+            if(success){
+                urisPhotos = urisPhotos.plus(uriCamara!!.toString()+"|VID")
+            }
+        }
+    )
 
     Scaffold(
         topBar = {
@@ -131,8 +164,6 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                     value = currentTitle.value,
                     onValueChange = { value ->
                         currentTitle.value = value
-                        saveButtonState.value =
-                            currentTitle.value != "" && currentNote.value != ""
                     },
                     label = { Text("Titulo de la nota") }
                 )
@@ -147,33 +178,27 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                     value = currentNote.value,
                     onValueChange = { value ->
                         currentNote.value = value
-                        saveButtonState.value =
-                            currentTitle.value != "" && currentNote.value != ""
                     },
                     label = { Text("Descripcion") }
                 )
-                Spacer(modifier = Modifier.height(10.dp))
-                AsyncImage(
-                    model = Uri.parse(currentPhotos.value),
-                    modifier = Modifier.fillMaxWidth().size(150.dp),
-                    contentDescription = "Selected image",
-                )
-                /*
-                if (currentPhotos.value.isNotEmpty()) {
-                    Image(
-                        painter = rememberAsyncImagePainter(
-                            ImageRequest
-                                .Builder(LocalContext.current)
-                                .data(data = Uri.parse(currentPhotos.value))
-                                .build()
-                        ),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxHeight(0.3f)
-                            .padding(6.dp),
-                        contentScale = ContentScale.Crop
+                Spacer(modifier = Modifier.height(3.dp))
+                LazyColumn(
+                    modifier = Modifier.padding(top = 0.dp),
+                    contentPadding = PaddingValues(0.dp),
+                ){
+                    itemsIndexed(urisPhotos){index, uri ->
+                        tarjetaMedia(uri = uri)
+                    }
+                }
+                if (permisosRequeridos) {
+                    mostrarDialogoPermisos(
+                        confirmarPermisos = {
+                            permisosRequeridos = false
+                            recordAudioPermissionState.launchPermissionRequest()
+                        },
+                        cancelarPermisos = { permisosRequeridos = false },
                     )
-                }*/
+                }
             }
         },
         bottomBar = {
@@ -191,7 +216,8 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                     }
                     IconButton(
                         onClick = {
-
+                            uriCamara = ComposeFileProvider.getImageUri(context)
+                            cameraLauncher.launch(uriCamara)
                         }
                     ) {
                         Icon(
@@ -200,7 +226,20 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = { /* doSomething() */ }) {
+                    IconButton(
+                        onClick = {
+                            val uri = ComposeFileProvider.getImageUri(context)
+                            videoLauncher.launch(uri)
+                            uriCamara = uri
+                        }
+                    ) {
+                        Icon(
+                            Icons.Filled.Camera,
+                            contentDescription = "Tomar video",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(onClick = { permisosRequeridos=true }) {
                         Icon(painter = painterResource(id = R.drawable.microphone),
                             contentDescription = "Audio",
                             tint = Color.White
@@ -214,7 +253,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                                 viewModel.createNote(
                                     currentTitle.value,
                                     currentNote.value,
-                                    currentPhotos.value
+                                    urisPhotos.joinToString()
                                 )
                                 navController.popBackStack()
                             },
@@ -228,6 +267,83 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
             )
         }
     )
+}
+
+@Composable
+private fun tarjetaMedia(uri: String) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        modifier = Modifier
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .sizeIn(minHeight = 72.dp)
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                var arreglo = uri.split("|")
+                if (arreglo.get(1).equals("IMG")) {
+                    AsyncImage(
+                        model = Uri.parse(arreglo.get(0)),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .size(150.dp),
+                        contentDescription = "Selected image",
+                    )
+                } else if (arreglo.get(1).equals("VID")) {
+                    VideoPlayer(Uri.parse(arreglo.get(0)))
+                }
+            }
+
+        }
+    }
+}
+
+@Composable
+private fun VideoPlayer(videoUri: Uri, modifier: Modifier = Modifier
+    .fillMaxWidth()
+    .size(150.dp)) {
+    val context = LocalContext.current
+    val exoPlayer = remember {
+        SimpleExoPlayer.Builder(context).build().apply {
+            setMediaItem(MediaItem.fromUri(videoUri))
+            prepare()
+        }
+    }
+
+    AndroidView(
+        factory = { context ->
+            PlayerView(context).apply {
+                player = exoPlayer
+            }
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun mostrarDialogoPermisos(
+    confirmarPermisos: () -> Unit,
+    cancelarPermisos: () -> Unit,
+) {
+    AlertDialog(onDismissRequest = {  },
+        containerColor = MaterialTheme.colorScheme.background,
+        title = { Text("Se requiere permiso para grabar audio") },
+        text = { Text("Para grabar un audio se requiere el permiso de Audio, pulse permitir para habilitar permitir los permisos") },
+        modifier = Modifier.padding(16.dp),
+        dismissButton = {
+            TextButton(onClick = cancelarPermisos ) {
+                Text(text = "Cancelar")
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = confirmarPermisos ) {
+                Text(text = "Permitir")
+            }
+        })
 }
 
 @Preview(showBackground = true)

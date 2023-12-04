@@ -81,6 +81,10 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.4.3")
     //LOAD IMAGE
     implementation("io.coil-kt:coil-compose:2.1.0")
+    //EXO PLAYER
+    implementation("com.google.android.exoplayer:exoplayer:2.15.1")
+    //Permisos
+    implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
