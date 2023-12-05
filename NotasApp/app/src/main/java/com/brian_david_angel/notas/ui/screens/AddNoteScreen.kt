@@ -2,6 +2,7 @@ package com.brian_david_angel.notas.ui.screens
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,22 +70,27 @@ import kotlinx.coroutines.launch
 import com.brian_david_angel.notas.NotesViewModel
 import com.brian_david_angel.notas.app.NotesApplication
 import com.brian_david_angel.notas.data.Note
+import com.brian_david_angel.notas.others_codes.AndroidAudioPlayer
+import com.brian_david_angel.notas.others_codes.AndroidAudioRecorder
 import com.brian_david_angel.notas.others_codes.ComposeFileProvider
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
+import java.io.File
 
+private var audioFile: File? = null
 
 @Composable
-fun AddNoteScreenUI(navController: NavController, notesViewModel: NotesViewModel){
+fun AddNoteScreenUI(navController: NavController, notesViewModel: NotesViewModel, ctx: Context){
     Box(modifier = Modifier.fillMaxSize()){
         Column(
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            ContentAddNoteScreenUI(navController = navController, viewModel = notesViewModel)
+            ContentAddNoteScreenUI(navController = navController, viewModel = notesViewModel, ctx=ctx)
         }
 
     }
@@ -93,7 +99,16 @@ fun AddNoteScreenUI(navController: NavController, notesViewModel: NotesViewModel
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavController){
+fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavController, ctx: Context){
+    val recorder by lazy {
+        AndroidAudioRecorder(ctx)
+    }
+
+    val player by lazy {
+        AndroidAudioPlayer(ctx)
+    }
+
+
     val context = LocalContext.current
     var uriCamara : Uri? = null
     val currentNote = rememberSaveable { mutableStateOf("") }
@@ -239,7 +254,48 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = { permisosRequeridos=true }) {
+                    IconButton(
+                        onClick = {
+                            if(!recordAudioPermissionState.status.isGranted){
+                                permisosRequeridos=true
+                            } else {
+                                File(ctx.cacheDir, "audio.mp3").also {
+                                    recorder.start(it)
+                                    audioFile = it
+                                }
+                            }
+                        }
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.microphone),
+                            contentDescription = "Audio",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            recorder.stop()
+                        }
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.microphone),
+                            contentDescription = "Audio",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            audioFile?.let { player.start(it) }
+                        }
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.microphone),
+                            contentDescription = "Audio",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            player.stop()
+                        }
+                    ) {
                         Icon(painter = painterResource(id = R.drawable.microphone),
                             contentDescription = "Audio",
                             tint = Color.White

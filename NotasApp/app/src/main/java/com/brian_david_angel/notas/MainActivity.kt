@@ -13,6 +13,8 @@ import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.ui.Modifier
 import com.brian_david_angel.notas.app.NotesApplication
 import com.brian_david_angel.notas.navegation.AppNavigation
+import com.brian_david_angel.notas.others_codes.AndroidAudioPlayer
+import com.brian_david_angel.notas.others_codes.AndroidAudioRecorder
 import com.brian_david_angel.notas.ui.theme.NotasTheme
 
 class MainActivity : ComponentActivity() {
@@ -29,13 +31,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NotasTheme {
+                val ctx = applicationContext
                 val windowSize = calculateWindowSizeClass(this)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation(windowSize.widthSizeClass, notesViewModel, taskViewModel)
+                    AppNavigation(windowSize.widthSizeClass, notesViewModel, taskViewModel, ctx)
                 }
             }
         }

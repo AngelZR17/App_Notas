@@ -1,5 +1,6 @@
 package com.brian_david_angel.notas.navegation
 
+import android.content.Context
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -19,7 +20,8 @@ import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 fun AppNavigation(
     windowSize: WindowWidthSizeClass,
     notesViewModel: NotesViewModel,
-    taskViewModel: TaskViewModel
+    taskViewModel: TaskViewModel,
+    ctx: Context
 ){
     val navigationType: NotesAppNavigationType
     val navController = rememberNavController()
@@ -53,7 +55,7 @@ fun AppNavigation(
             EditTaskScreenUI(taskViewModel, navController)
         }
         composable("addnote"){
-            AddNoteScreenUI(navController, notesViewModel)
+            AddNoteScreenUI(navController, notesViewModel, ctx)
         }
         composable("editnote"){
             EditNoteScreenUI(notesViewModel, navController)
