@@ -80,6 +80,7 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import java.io.File
+import java.net.URI
 
 private var audioFile: File? = null
 
@@ -202,7 +203,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                     contentPadding = PaddingValues(0.dp),
                 ){
                     itemsIndexed(urisPhotos){index, uri ->
-                        tarjetaMedia(uri = uri)
+                        tarjetaMedia(uri = uri, player= player)
                     }
                 }
                 if (permisosRequeridos) {
@@ -259,7 +260,13 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                             if(!recordAudioPermissionState.status.isGranted){
                                 permisosRequeridos=true
                             } else {
-                                File(ctx.cacheDir, "audio.mp3").also {
+                                var i : Int=0
+                                var outputFile: File
+                                do {
+                                    i++
+                                    outputFile = File(ctx.cacheDir, "audio"+i+".mp3")
+                                }while(outputFile.exists())
+                                outputFile.also {
                                     recorder.start(it)
                                     audioFile = it
                                 }
@@ -274,6 +281,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                     IconButton(
                         onClick = {
                             recorder.stop()
+                            urisPhotos = urisPhotos.plus(Uri.fromFile(audioFile)!!.toString()+"|AUD")
                         }
                     ) {
                         Icon(painter = painterResource(id = R.drawable.microphone),
@@ -283,6 +291,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                     }
                     IconButton(
                         onClick = {
+
                             audioFile?.let { player.start(it) }
                         }
                     ) {
@@ -326,7 +335,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
 }
 
 @Composable
-private fun tarjetaMedia(uri: String) {
+private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier
@@ -351,6 +360,30 @@ private fun tarjetaMedia(uri: String) {
                     )
                 } else if (arreglo.get(1).equals("VID")) {
                     VideoPlayer(Uri.parse(arreglo.get(0)))
+                } else if (arreglo.get(1).equals("AUD")){
+                    IconButton(
+                        onClick = {
+                            val uriString = arreglo.get(0)
+                            val uri = URI(uriString)
+                            val file = File(uri)
+                            player.start(file)
+                        }
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.microphone),
+                            contentDescription = "Audio",
+                            tint = Color.White
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            player.stop()
+                        }
+                    ) {
+                        Icon(painter = painterResource(id = R.drawable.microphone),
+                            contentDescription = "Audio",
+                            tint = Color.White
+                        )
+                    }
                 }
             }
 
