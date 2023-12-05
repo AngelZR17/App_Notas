@@ -2,6 +2,7 @@ package com.brian_david_angel.notas.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -110,34 +111,58 @@ fun ContentHomeScreenUI(viewModel: NotesViewModel, navController: NavController,
             BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                 actions = {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            Icons.Filled.Description,
-                            contentDescription = "Notas",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate("hometask") }) {
-                        Icon(
-                            Icons.Filled.Task,
-                            contentDescription = "Tareas",
-                            tint = Color.White,
-                            modifier = Modifier.size(24.dp)
-                        )
-                    }
-                },
-                floatingActionButton = {
-                    FloatingActionButton(
-                        onClick = {
-                            navController.navigate("addnote")
-                        },
-                        containerColor = MaterialTheme.colorScheme.primary
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)
+                        IconButton(onClick = { }) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    Icons.Filled.Description,
+                                    contentDescription = "Notas",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = "Notas",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color.White
+                                )
+                            }
+                        }
+
+                        IconButton(onClick = { navController.navigate("hometask") }) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Icon(
+                                    Icons.Filled.Task,
+                                    contentDescription = "Tareas",
+                                    tint = Color.White,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = "Tareas",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color.White
+                                )
+                            }
+                        }
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    navController.navigate("addnote")
+                },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.White)
+            }
         },
         content = {
             contenidoPrincipal(contentPadding = it, notes = notes.value.orPlaceHolderList(), viewModel=viewModel, navController=navController, navigationType=navigationType)
