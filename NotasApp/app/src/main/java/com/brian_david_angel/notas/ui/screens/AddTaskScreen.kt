@@ -51,6 +51,7 @@ import com.brian_david_angel.notas.Constants
 import com.brian_david_angel.notas.TaskViewModel
 import com.brian_david_angel.notas.R
 import com.brian_david_angel.notas.app.NotesApplication
+import com.brian_david_angel.notas.others_codes.Notificaciones
 import com.brian_david_angel.notas.ui.theme.NotasTheme
 import java.util.Calendar
 
@@ -74,6 +75,7 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
     val note = remember {
         mutableStateOf(Constants.noteDetailPlaceHolder)
     }
+    val ctx = LocalContext.current
     val currentTask = rememberSaveable { mutableStateOf("") }
     val currentTitle = rememberSaveable { mutableStateOf("") }
     val currentFecha = rememberSaveable { mutableStateOf("") }
@@ -224,6 +226,7 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
                                     currentFecha.value,
                                     currentPhotos.value
                                 )
+                                Notificaciones().scheduleNotification(ctx)
                                 navController.popBackStack()
                             },
                             containerColor = MaterialTheme.colorScheme.primary,

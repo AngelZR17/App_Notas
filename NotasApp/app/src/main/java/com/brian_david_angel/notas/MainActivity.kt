@@ -15,6 +15,7 @@ import com.brian_david_angel.notas.app.NotesApplication
 import com.brian_david_angel.notas.navegation.AppNavigation
 import com.brian_david_angel.notas.others_codes.AndroidAudioPlayer
 import com.brian_david_angel.notas.others_codes.AndroidAudioRecorder
+import com.brian_david_angel.notas.others_codes.Notificaciones
 import com.brian_david_angel.notas.ui.theme.NotasTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    Notificaciones().createChannel(ctx)
                     AppNavigation(windowSize.widthSizeClass, notesViewModel, taskViewModel, ctx)
                 }
             }
