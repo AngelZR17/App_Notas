@@ -49,7 +49,7 @@ fun AppNavigation(
             HomeScreenTaskUI(taskViewModel,navController, navigationType)
         }
         composable("addtask"){
-            AddTaskScreenUI(navController, taskViewModel)
+            AddTaskScreenUI(navController, taskViewModel, ctx)
         }
         composable("edittask"){
             EditTaskScreenUI(taskViewModel, navController)
