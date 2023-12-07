@@ -52,7 +52,7 @@ fun AppNavigation(
             AddTaskScreenUI(navController, taskViewModel, ctx)
         }
         composable("edittask"){
-            EditTaskScreenUI(taskViewModel, navController)
+            EditTaskScreenUI(taskViewModel, navController, ctx)
         }
         composable("addnote"){
             AddNoteScreenUI(navController, notesViewModel, ctx)
