@@ -58,7 +58,7 @@ fun AppNavigation(
             AddNoteScreenUI(navController, notesViewModel, ctx)
         }
         composable("editnote"){
-            EditNoteScreenUI(notesViewModel, navController)
+            EditNoteScreenUI(notesViewModel, navController, ctx)
         }
     }
 }

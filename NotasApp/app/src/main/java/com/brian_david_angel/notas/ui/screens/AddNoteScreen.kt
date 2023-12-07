@@ -7,6 +7,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,8 +24,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.MicOff
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Task
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
@@ -55,6 +64,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -117,6 +127,9 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
     var urisPhotos by remember { mutableStateOf(listOf<String>()) }
 
 
+    var isGrabacion = rememberSaveable { mutableStateOf(false) }
+
+
     var permisosRequeridos by rememberSaveable { mutableStateOf(false) }
     val recordAudioPermissionState = rememberPermissionState(
         Manifest.permission.RECORD_AUDIO
@@ -148,7 +161,6 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
             }
         }
     )
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -169,7 +181,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = dimensionResource(R.dimen.padding_top_column)),
+                    .padding(top = dimensionResource(R.dimen.padding_top_column), bottom = 80.dp),
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth()
@@ -190,7 +202,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                             dimensionResource(R.dimen.padding_start_textField),
                             end = dimensionResource(R.dimen.padding_end_textField)
                         )
-                        .height(400.dp),
+                        .height(200.dp),
                     value = currentNote.value,
                     onValueChange = { value ->
                         currentNote.value = value
@@ -225,7 +237,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                         getImageRequest.launch(arrayOf("image/*"))
                     }
                     ) {
-                        Icon(painter = painterResource(id = R.drawable.attach_file),
+                        Icon(Icons.Filled.AttachFile,
                             contentDescription = "Adjuntar archivo",
                             tint = Color.White
                         )
@@ -237,7 +249,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                         }
                     ) {
                         Icon(
-                            Icons.Filled.Camera,
+                            Icons.Filled.CameraAlt,
                             contentDescription = "Tomar foto",
                             tint = Color.White
                         )
@@ -250,65 +262,49 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                         }
                     ) {
                         Icon(
-                            Icons.Filled.Camera,
+                            Icons.Filled.Videocam,
                             contentDescription = "Tomar video",
                             tint = Color.White
                         )
                     }
-                    IconButton(
-                        onClick = {
-                            if(!recordAudioPermissionState.status.isGranted){
-                                permisosRequeridos=true
-                            } else {
-                                var i : Int=0
-                                var outputFile: File
-                                do {
-                                    i++
-                                    outputFile = File(ctx.cacheDir, "audio"+i+".mp3")
-                                }while(outputFile.exists())
-                                outputFile.also {
-                                    recorder.start(it)
-                                    audioFile = it
+                    if(!isGrabacion.value){
+                        IconButton(
+                            onClick = {
+                                if(!recordAudioPermissionState.status.isGranted){
+                                    permisosRequeridos=true
+                                } else {
+                                    var i : Int=0
+                                    var outputFile: File
+                                    do {
+                                        i++
+                                        outputFile = File(ctx.cacheDir, "audio"+i+".mp3")
+                                    }while(outputFile.exists())
+                                    outputFile.also {
+                                        recorder.start(it)
+                                        audioFile = it
+                                    }
+                                    isGrabacion.value=true
                                 }
                             }
+                        ) {
+                            Icon(Icons.Filled.Mic,
+                                contentDescription = "Grabar Audio",
+                                tint = Color.White
+                            )
                         }
-                    ) {
-                        Icon(painter = painterResource(id = R.drawable.microphone),
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            recorder.stop()
-                            urisPhotos = urisPhotos.plus(Uri.fromFile(audioFile)!!.toString()+"|AUD")
+                    }else{
+                        IconButton(
+                            onClick = {
+                                recorder.stop()
+                                urisPhotos = urisPhotos.plus(Uri.fromFile(audioFile)!!.toString()+"|AUD")
+                                isGrabacion.value=false
+                            }
+                        ) {
+                            Icon(Icons.Filled.MicOff,
+                                contentDescription = "Detener Grabacion",
+                                tint = Color.White
+                            )
                         }
-                    ) {
-                        Icon(painter = painterResource(id = R.drawable.microphone),
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-
-                            audioFile?.let { player.start(it) }
-                        }
-                    ) {
-                        Icon(painter = painterResource(id = R.drawable.microphone),
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            player.stop()
-                        }
-                    ) {
-                        Icon(painter = painterResource(id = R.drawable.microphone),
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
                     }
                 },
                 floatingActionButton = {
@@ -325,7 +321,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                             containerColor = MaterialTheme.colorScheme.primary,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.save), "Localized description", tint = Color.White)
+                            Icon(Icons.Filled.Save, "Localized description", tint = Color.White)
                         }
                     }
                 }
@@ -340,7 +336,6 @@ private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)
-
     ) {
         Row(
             modifier = Modifier
@@ -351,6 +346,9 @@ private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
             Column(modifier = Modifier.weight(1f)) {
                 var arreglo = uri.split("|")
                 if (arreglo.get(1).equals("IMG")) {
+                    Text(
+                        text = "Imagen",
+                    )
                     AsyncImage(
                         model = Uri.parse(arreglo.get(0)),
                         modifier = Modifier
@@ -359,34 +357,46 @@ private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
                         contentDescription = "Selected image",
                     )
                 } else if (arreglo.get(1).equals("VID")) {
+                    Text(
+                        text = "Video",
+                    )
                     VideoPlayer(Uri.parse(arreglo.get(0)))
                 } else if (arreglo.get(1).equals("AUD")){
-                    IconButton(
-                        onClick = {
-                            val uriString = arreglo.get(0)
-                            val uri = URI(uriString)
-                            val file = File(uri)
-                            player.start(file)
-                        }
+                    Text(
+                        text = "Audio",
+                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
                     ) {
-                        Icon(painter = painterResource(id = R.drawable.microphone),
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            player.stop()
+                        IconButton(
+                            onClick = {
+                                val uriString = arreglo.get(0)
+                                val uri = URI(uriString)
+                                val file = File(uri)
+                                player.start(file)
+                            }
+                        ) {
+                            Icon(Icons.Filled.PlayArrow,
+                                contentDescription = "Audio",
+                                tint = Color.White
+                            )
                         }
-                    ) {
-                        Icon(painter = painterResource(id = R.drawable.microphone),
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
+                        IconButton(
+                            onClick = {
+                                player.stop()
+                            }
+                        ) {
+                            Icon(Icons.Filled.Stop,
+                                contentDescription = "Audio",
+                                tint = Color.White
+                            )
+                        }
                     }
+
                 }
             }
-
         }
     }
 }
