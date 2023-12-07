@@ -219,7 +219,7 @@ fun ContentEditNoteScreenUI(noteId: Int,viewModel: NotesViewModel, navController
                             dimensionResource(R.dimen.padding_start_textField),
                             end = dimensionResource(R.dimen.padding_end_textField)
                         )
-                        .height(200.dp),
+                        .height(150.dp),
                     value = currentNote.value,
                     onValueChange = { value ->
                         currentNote.value = value
@@ -382,40 +382,48 @@ private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
                         text = "Video",
                     )
                     VideoPlayer(Uri.parse(arreglo.get(0)))
-                } else if (arreglo.get(1).equals("AUD")){
+                } else if (arreglo.get(1).equals("AUD")) {
                     Text(
                         text = "Audio",
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
-                    IconButton(
-                        onClick = {
-                            val uriString = arreglo.get(0)
-                            val uri = URI(uriString)
-                            val file = File(uri)
-                            player.start(file)
+                            IconButton(
+                                onClick = {
+                                    val uriString = arreglo.get(0)
+                                    val uri = URI(uriString)
+                                    val file = File(uri)
+                                    player.start(file)
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Filled.PlayArrow,
+                                    contentDescription = "Audio",
+                                    tint = Color.White
+                                )
+                            }
+                            IconButton(
+                                onClick = {
+                                    player.stop()
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Filled.Stop,
+                                    contentDescription = "Audio",
+                                    tint = Color.White
+                                )
+                            }
                         }
-                    ) {
-                        Icon(Icons.Filled.PlayArrow,
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            player.stop()
-                        }
-                    ) {
-                        Icon(Icons.Filled.Stop,
-                            contentDescription = "Audio",
-                            tint = Color.White
-                        )
                     }
                 }
-            }
             }
         }
     }

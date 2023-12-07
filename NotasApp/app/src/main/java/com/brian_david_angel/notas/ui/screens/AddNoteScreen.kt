@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Task
@@ -89,6 +90,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
+import okhttp3.internal.wait
 import java.io.File
 import java.net.URI
 
@@ -202,7 +204,7 @@ fun ContentAddNoteScreenUI(viewModel: NotesViewModel, navController: NavControll
                             dimensionResource(R.dimen.padding_start_textField),
                             end = dimensionResource(R.dimen.padding_end_textField)
                         )
-                        .height(200.dp),
+                        .height(150.dp),
                     value = currentNote.value,
                     onValueChange = { value ->
                         currentNote.value = value
@@ -361,11 +363,16 @@ private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
                         text = "Video",
                     )
                     VideoPlayer(Uri.parse(arreglo.get(0)))
-                } else if (arreglo.get(1).equals("AUD")){
+                } else if (arreglo.get(1).equals("AUD")) {
                     Text(
                         text = "Audio",
                     )
-                    Row(
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -378,7 +385,8 @@ private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
                                 player.start(file)
                             }
                         ) {
-                            Icon(Icons.Filled.PlayArrow,
+                            Icon(
+                                Icons.Filled.PlayArrow,
                                 contentDescription = "Audio",
                                 tint = Color.White
                             )
@@ -388,13 +396,14 @@ private fun tarjetaMedia(uri: String, player: AndroidAudioPlayer) {
                                 player.stop()
                             }
                         ) {
-                            Icon(Icons.Filled.Stop,
+                            Icon(
+                                Icons.Filled.Stop,
                                 contentDescription = "Audio",
                                 tint = Color.White
                             )
                         }
                     }
-
+                    }
                 }
             }
         }
