@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MicOff
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.AlertDialog
@@ -188,7 +189,7 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = dimensionResource(R.dimen.padding_top_column)),
+                    .padding(top = dimensionResource(R.dimen.padding_top_column), bottom = 80.dp),
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth()
@@ -335,7 +336,7 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
                             containerColor = MaterialTheme.colorScheme.primary,
                             elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
                         ) {
-                            Icon(painter = painterResource(id = R.drawable.save), "Localized description", tint = Color.White)
+                            Icon(Icons.Filled.Save, "Localized description", tint = Color.White)
                         }
                     }
                 }
