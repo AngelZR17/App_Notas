@@ -27,9 +27,9 @@ class TaskViewModel(
         }
     }
 
-    fun createTask(title: String, task: String, date: String, image: String? = null) {
+    fun createTask(title: String, task: String, date: String, hour: String, image: String? = null) {
         viewModelScope.launch(Dispatchers.IO){
-            db.insertTask(Task(title = title, task = task, dateUpdated = date, imageUri = image))
+            db.insertTask(Task(title = title, task = task, dateUpdated = date, hourUpdated = hour, imageUri = image))
         }
     }
 

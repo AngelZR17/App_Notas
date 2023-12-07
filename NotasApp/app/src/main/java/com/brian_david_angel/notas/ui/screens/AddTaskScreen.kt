@@ -3,10 +3,12 @@ package com.brian_david_angel.notas.ui.screens
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,7 +24,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.CameraAlt
@@ -120,6 +124,7 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
     val currentTask = rememberSaveable { mutableStateOf("") }
     val currentTitle = rememberSaveable { mutableStateOf("") }
     val currentFecha = rememberSaveable { mutableStateOf("") }
+    val currentHora = rememberSaveable { mutableStateOf("") }
     val currentPhotos = rememberSaveable { mutableStateOf("") }
     val saveButtonState = rememberSaveable { mutableStateOf(false) }
     var urisPhotos by remember { mutableStateOf(listOf<String>()) }
@@ -223,6 +228,8 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 DatePicker(currentFecha)
+                Spacer(modifier = Modifier.height(10.dp))
+                TimePicker(currentHora)
                 LazyColumn(
                     modifier = Modifier.padding(top = 0.dp),
                     contentPadding = PaddingValues(0.dp),
@@ -328,6 +335,7 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
                                     currentTitle.value,
                                     currentTask.value,
                                     currentFecha.value,
+                                    currentHora.value,
                                     urisPhotos.joinToString()
                                 )
                                 Notificaciones().scheduleNotification(ctx)
@@ -389,6 +397,53 @@ private fun DatePicker(
                 Icons.Default.DateRange,
                 contentDescription = null,
                 modifier = Modifier.clickable { nDatePickerDialog.show() }
+            )
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TimePicker(
+    currentHour: MutableState<String>
+) {
+    var hora by rememberSaveable {
+        mutableStateOf("")
+    }
+
+    val hour: Int
+    val minute: Int
+    val nCalendar = Calendar.getInstance()
+    hour = nCalendar.get(Calendar.HOUR_OF_DAY)
+    minute = nCalendar.get(Calendar.MINUTE)
+
+    val nTimePickerDialog = TimePickerDialog(
+        LocalContext.current,
+        { _, hourOfDay: Int, minute: Int ->
+            hora = String.format("%02d:%02d", hourOfDay, minute)
+            currentHour.value = hora
+        },
+        hour, minute, true
+    )
+
+    TextField(
+        modifier = Modifier.fillMaxWidth()
+            .padding(
+                dimensionResource(R.dimen.padding_start_textField),
+                end = dimensionResource(R.dimen.padding_end_textField)
+            ),
+        value = currentHour.value,
+        onValueChange = { value ->
+            currentHour.value = value
+        },
+        readOnly = true,
+        label = { Text("Hora") },
+        placeholder = { Text("Selecciona la hora") },
+        leadingIcon = {
+            Icon(
+                Icons.Default.AccessTime,
+                contentDescription = null,
+                modifier = Modifier.clickable { nTimePickerDialog.show() }
             )
         }
     )

@@ -14,5 +14,6 @@ data class Task constructor(
     @ColumnInfo(name = "task")          val task: String,
     @ColumnInfo(name = "title")         val title: String,
     @ColumnInfo(name = "dateUpdated")   val dateUpdated: String,
+    @ColumnInfo(name = "hourUpdated")   val hourUpdated: String,
     @ColumnInfo(name = "imageUri")     val imageUri: String? = null
 )

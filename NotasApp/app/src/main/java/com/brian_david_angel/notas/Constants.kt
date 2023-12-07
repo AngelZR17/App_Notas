@@ -22,7 +22,7 @@ object Constants {
 
     fun List<Task>?.orPlaceHolderListTask(): List<Task> {
         fun placeHolderList(): List<Task> {
-            return listOf(Task(id = 0, title = "No Notes Found", task = "Please create a note.", dateUpdated = ""))
+            return listOf(Task(id = 0, title = "No Notes Found", task = "Please create a note.", dateUpdated = "", hourUpdated = ""))
         }
         return if (this != null && this.isNotEmpty()){
             this
@@ -30,5 +30,5 @@ object Constants {
     }
 
     val noteDetailPlaceHolder = Note(note = "Cannot find note details", id = 0, title = "Cannot find note details")
-    val taskDetailPlaceHolder = Task(task = "Cannot find note details", id = 0, title = "Cannot find note details", dateUpdated = "")
+    val taskDetailPlaceHolder = Task(task = "Cannot find note details", id = 0, title = "Cannot find note details", dateUpdated = "", hourUpdated = "")
 }
