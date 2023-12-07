@@ -8,7 +8,13 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 class Notificaciones {
     companion object {
@@ -16,24 +22,30 @@ class Notificaciones {
     }
 
     @SuppressLint("ScheduleExactAlarm")
-    fun scheduleNotification(ctx: Context) {
-        val intent = Intent(ctx, AlarmNotification::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(
-            ctx,
-            1,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
+    fun scheduleNotification(ctx: Context, titulo: String, millis: Long) {
+        val intervalos = millis / 3
+        val totalNotificaciones = 3
+        val tiempoActual = System.currentTimeMillis()
 
-        val alarmManager = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + 15000, pendingIntent)
+        for (i in 1..totalNotificaciones) {
+            val intent = Intent(ctx, AlarmNotification::class.java)
+            intent.putExtra("textoNotificacion", titulo)
+            val pendingIntent = PendingIntent.getBroadcast(
+                ctx,
+                1+i,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+            val alarmManager = ctx.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, tiempoActual + i * intervalos, pendingIntent)
+        }
+
     }
-
     fun createChannel(ctx: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(MY_CHANNEL_ID, "MySuperChannel", NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = "SUSCRIBETE"
+                description = "hol"
             }
 
             val notificationManager: NotificationManager =

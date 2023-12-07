@@ -6,21 +6,28 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.brian_david_angel.notas.MainActivity
 import com.brian_david_angel.notas.R
 
-class AlarmNotification: BroadcastReceiver() {
+class AlarmNotification(): BroadcastReceiver() {
 
     companion object{
         const val NOTIFICATION_ID = 1
     }
 
-    override fun onReceive(context: Context, p1: Intent?) {
-        createSimpleNotification(context)
+    override fun onReceive(context: Context, p1: Intent) {
+        if(p1.hasExtra("textoNotificacion")){
+            val textoNotificacion: String? = p1.getStringExtra("textoNotificacion")
+            createSimpleNotification(context, textoNotificacion)
+        }
+
+
     }
 
-    private fun createSimpleNotification(context: Context) {
+    private fun createSimpleNotification(context: Context, textoNotificacion: String?) {
+        var text=textoNotificacion?.split("|")
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
@@ -30,11 +37,11 @@ class AlarmNotification: BroadcastReceiver() {
 
         val notification = NotificationCompat.Builder(context, Notificaciones.MY_CHANNEL_ID)
             .setSmallIcon(R.drawable.notification)
-            .setContentTitle("My title")
-            .setContentText("Esto es un ejemplo <3")
+            .setContentTitle(text?.get(0))
+            .setContentText(text?.get(1))
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi Holita holi ")
+                    .bigText(text?.get(2))
             )
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

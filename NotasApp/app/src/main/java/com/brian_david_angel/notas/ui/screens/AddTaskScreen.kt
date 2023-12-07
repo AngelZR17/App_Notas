@@ -338,7 +338,9 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
                                     currentHora.value,
                                     urisPhotos.joinToString()
                                 )
-                                Notificaciones().scheduleNotification(ctx)
+                                var hora=currentHora.value.split(":")
+                                val millis = conversion(hora.get(0).toLong(), hora.get(1).toLong())
+                                Notificaciones().scheduleNotification(ctx, currentTitle.value+"|"+currentTask.value+"|"+currentTask.value, millis)
                                 navController.popBackStack()
                             },
                             containerColor = MaterialTheme.colorScheme.primary,
@@ -400,6 +402,19 @@ private fun DatePicker(
             )
         }
     )
+}
+
+private fun getCurrentTime(): Pair<Int, Int>{
+    val cal = Calendar.getInstance()
+    val hour = cal.get(Calendar.HOUR_OF_DAY)
+    val minute = cal.get(Calendar.MINUTE)
+    return Pair(hour,minute)
+}
+
+private fun conversion(hora: Long, minuto: Long): Long {
+    val dupla = getCurrentTime()
+    val millis = (((hora-dupla.first)*60) + (minuto-dupla.second)) * 60 * 1000
+    return millis
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -273,6 +273,10 @@ fun tarjetaTarea(task: Task,navController: NavController, viewModel: TaskViewMod
                     text = task.dateUpdated,
                     style = MaterialTheme.typography.bodyLarge
                 )
+                Text(
+                    text = task.hourUpdated,
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
             Spacer(Modifier.width(16.dp))
             Box(
