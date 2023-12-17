@@ -1,6 +1,7 @@
 package com.brian_david_angel.notas.ui.screens
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -67,6 +68,25 @@ import com.brian_david_angel.notas.ui.theme.NotasTheme
 import com.brian_david_angel.notas.ui.utils.NotesAppNavigationType
 import kotlinx.coroutines.launch
 
+
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.*
+import com.brian_david_angel.notas.data.BottomNavItem
+
 @Composable
 fun HomeScreenUI(notesViewModel: NotesViewModel, navController: NavController, navigationType: NotesAppNavigationType){
     Box(modifier = Modifier.fillMaxSize()){
@@ -88,72 +108,26 @@ fun ContentHomeScreenUI(viewModel: NotesViewModel, navController: NavController,
             TopAppBar(
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
                 title = { Text("Notas", color = Color.White) },
-                /*actions = {
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(painter = painterResource(id = R.drawable.search), contentDescription = "Buscar", tint = Color.White)
-                    }
-
-                    IconButton(
-                        onClick = {
-
-                        }
-                    ) {
-                        Icon(painter = painterResource(id = R.drawable.notification), contentDescription = "Recordatorio", tint = Color.White)
-                    }
-                }
-                 */
             )
         },
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                actions = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        IconButton(onClick = { }) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    Icons.Filled.Description,
-                                    contentDescription = "Notas",
-                                    tint = Color.White,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Text(
-                                    text = "Notas",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Color.White
-                                )
-                            }
-                        }
+            NavigationBar (
+                containerColor = MaterialTheme.colorScheme.primary
+            ){
+                var selectedItem by remember { mutableStateOf(0) }
+                bottomNavItems.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        selected = selectedItem == index,
+                        onClick = {
+                            selectedItem = index
+                            navController.navigate(item.ruta)
+                        },
+                        label = { Text(text = item.nombre) },
+                        icon = { Icon(item.icono, contentDescription = "${item.nombre} Icon", tint = Color.White) },
 
-                        IconButton(onClick = { navController.navigate("hometask") }) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(
-                                    Icons.Filled.Task,
-                                    contentDescription = "Tareas",
-                                    tint = Color.White,
-                                    modifier = Modifier.size(24.dp)
-                                )
-                                Text(
-                                    text = "Tareas",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Color.White
-                                )
-                            }
-                        }
-                    }
+                    )
                 }
-            )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -335,8 +309,6 @@ private fun mostrarDialogoEliminacion(
             }
         })
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

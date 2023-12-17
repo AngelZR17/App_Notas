@@ -328,7 +328,8 @@ fun ContentAddTaskScreenUI(viewModel: TaskViewModel, navController: NavControlle
                     }
                 },
                 floatingActionButton = {
-                    if(currentTitle.value.isNotBlank() && currentTask.value.isNotBlank()){
+                    if(currentTitle.value.isNotBlank() && currentTask.value.isNotBlank() &&
+                        currentFecha.value.isNotBlank() && currentHora.value.isNotBlank()){
                         FloatingActionButton(
                             onClick = {
                                 viewModel.createTask(

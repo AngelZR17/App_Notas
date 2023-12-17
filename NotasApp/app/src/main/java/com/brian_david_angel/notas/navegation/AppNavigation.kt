@@ -41,23 +41,26 @@ fun AppNavigation(
         }
     }
 
-    NavHost(navController = navController, startDestination = "home"){
-        composable(route = "home") {
+    NavHost(
+        navController = navController,
+        startDestination = AppScreens.HomeScreenUI.route
+    ){
+        composable(route = AppScreens.HomeScreenUI.route) {
             HomeScreenUI(notesViewModel,navController, navigationType)
         }
-        composable("hometask"){
+        composable(route = AppScreens.HomeScreenTaskUI.route){
             HomeScreenTaskUI(taskViewModel,navController, navigationType)
         }
-        composable("addtask"){
+        composable(route = AppScreens.AddTaskScreenUI.route){
             AddTaskScreenUI(navController, taskViewModel, ctx)
         }
-        composable("edittask"){
+        composable(route = AppScreens.EditTaskScreenUI.route){
             EditTaskScreenUI(taskViewModel, navController, ctx)
         }
-        composable("addnote"){
+        composable(route = AppScreens.AddNoteScreenUI.route){
             AddNoteScreenUI(navController, notesViewModel, ctx)
         }
-        composable("editnote"){
+        composable(route = AppScreens.EditNoteScreenUI.route){
             EditNoteScreenUI(notesViewModel, navController, ctx)
         }
     }
